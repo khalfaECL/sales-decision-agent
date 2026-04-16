@@ -53,6 +53,8 @@ Structure every final answer as:
 
 ## CONSTRAINTS
 - Never guess — always use tools to get real data before making claims.
+- If a tool call returns an error, RETRY the tool call. Do NOT invent data.
+- NEVER fabricate numbers. Every number in your response must come from a tool result.
 - If a question is ambiguous, analyze from multiple angles rather than asking for clarification.
 - Always quantify your recommendations (percentages, amounts, comparisons).
 - Flag any data limitations or caveats in your analysis.
@@ -164,7 +166,15 @@ def run_agent(user_query: str, verbose: bool = True) -> str:
                 # Chez Anthropic → tc.input est DÉJÀ un dict Python
                 # Chez Groq      → tc.function.arguments est une STRING JSON
                 # Il faut la parser avec json.loads() !
-                tool_input = json.loads(tc.function.arguments)
+                #
+                # EDGE CASE GROQ : quand un tool n'a pas de paramètres requis,
+                # Groq peut envoyer None ou "" au lieu de "{}".
+                # On doit gérer ça sinon json.loads(None) → crash.
+                raw_args = tc.function.arguments
+                if raw_args is None or raw_args.strip() == "":
+                    tool_input = {}
+                else:
+                    tool_input = json.loads(raw_args)
 
                 if verbose:
                     print(f"   🔧 Tool call: {tool_name}({tool_input})")
