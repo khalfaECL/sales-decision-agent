@@ -3,7 +3,7 @@ main.py — Point d'entrée de l'agent.
 
 Usage:
   1. cp .env.example .env
-  2. Edit .env → add your ANTHROPIC_API_KEY
+  2. Edit .env → add your GROQ_API_KEY
   3. python main.py
 """
 
@@ -11,9 +11,6 @@ from src.agent import run_agent
 
 
 def main():
-    # --- Questions business à tester ---
-    # Décommente celle que tu veux, ou écris la tienne.
-
     queries = [
         "What are the biggest risks in our sales data? Give me actionable recommendations.",
         # "Which product should we push as a priority and why?",
