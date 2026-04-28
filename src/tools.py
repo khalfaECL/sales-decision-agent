@@ -128,7 +128,9 @@ def execute_tool(tool_name: str, tool_input: dict) -> str:
     Reçoit le nom du tool + ses paramètres depuis le LLM,
     exécute la fonction correspondante, retourne le résultat en JSON string.
     """
-
+    # Dans tools.py, dans execute_tool, ajouter au début :
+    if tool_input is None:
+        tool_input = {}
     tool_map = {
         "get_sales_summary": get_sales_summary,
         "get_sales_by_product": get_sales_by_product,
